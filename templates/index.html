@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Weather App</h1>
+            <p class="subtitle">Enter a city to see current weather</p>
+        </header>
+
+        <form id="weatherForm" class="search-form">
+            <div class="input-group">
+                <input 
+                    type="text" 
+                    id="cityInput" 
+                    placeholder="Enter city name..." 
+                    autocomplete="off"
+                    required
+                >
+                <button type="submit" class="search-btn">Search</button>
+            </div>
+            <div id="errorMessage" class="error-message"></div>
+        </form>
+
+        <div id="loadingSpinner" class="loading-spinner" style="display: none;">
+            <div class="spinner"></div>
+            <p>Loading weather data...</p>
+        </div>
+
+        <div id="weatherDisplay" class="weather-display" style="display: none;">
+            <div class="weather-card">
+                <div class="location">
+                    <h2 id="cityName"></h2>
+                    <p id="countryCode"></p>
+                </div>
+
+                <div class="temperature-section">
+                    <img id="weatherIcon" src="" alt="Weather icon" class="weather-icon">
+                    <div class="temperature-info">
+                        <div class="current-temp">
+                            <span id="temperature"></span>
+                            <span class="unit">°C</span>
+                        </div>
+                        <p id="condition" class="condition"></p>
+                        <p id="description" class="description"></p>
+                    </div>
+                </div>
+
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <span class="label">Feels Like</span>
+                        <span id="feelsLike" class="value"></span>
+                        <span class="unit">°C</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Humidity</span>
+                        <span id="humidity" class="value"></span>
+                        <span class="unit">%</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Wind Speed</span>
+                        <span id="windSpeed" class="value"></span>
+                        <span class="unit">m/s</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Pressure</span>
+                        <span id="pressure" class="value"></span>
+                        <span class="unit">hPa</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="welcomeMessage" class="welcome-message">
+            <p>🌤️ Search for a city to get started</p>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
