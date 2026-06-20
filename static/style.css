@@ -110,6 +110,80 @@ header .subtitle {
     animation: slideIn 0.3s ease-out;
 }
 
+.search-history-section {
+    margin-bottom: 20px;
+    animation: slideIn 0.3s ease-out;
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.history-label {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.clear-history-btn {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.clear-history-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.clear-history-btn:active {
+    transform: scale(0.98);
+}
+
+.search-history {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.history-item {
+    background: rgba(255, 255, 255, 0.9);
+    color: #0084ff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+}
+
+.history-item:hover {
+    background: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-1px);
+}
+
+.history-item:active {
+    transform: translateY(0);
+}
+
 .loading-spinner {
     display: flex;
     flex-direction: column;
@@ -301,6 +375,21 @@ header .subtitle {
 
     .search-btn {
         width: 100%;
+    }
+
+    .search-history {
+        gap: 6px;
+    }
+
+    .history-item {
+        padding: 6px 12px;
+        font-size: 12px;
+        max-width: 120px;
+    }
+
+    .clear-history-btn {
+        padding: 5px 10px;
+        font-size: 11px;
     }
 
     .weather-card {

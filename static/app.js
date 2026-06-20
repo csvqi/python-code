@@ -14,9 +14,24 @@ const errorMessage = document.getElementById('errorMessage');
 const loadingSpinner = document.getElementById('loadingSpinner');
 const weatherDisplay = document.getElementById('weatherDisplay');
 const welcomeMessage = document.getElementById('welcomeMessage');
+const searchHistorySection = document.getElementById('searchHistorySection');
+const searchHistoryContainer = document.getElementById('searchHistory');
+const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+
+// Search history management
+const MAX_HISTORY_ITEMS = 10;
+const HISTORY_KEY = 'weatherAppSearchHistory';
+
+// Load and display history on page load
+document.addEventListener('DOMContentLoaded', () => {
+    loadAndDisplaySearchHistory();
+});
 
 // Handle form submission
 weatherForm.addEventListener('submit', handleSearch);
+
+// Clear history button
+clearHistoryBtn.addEventListener('click', clearSearchHistory);
 
 function handleSearch(event) {
     event.preventDefault();
@@ -58,6 +73,10 @@ async function fetchWeather(city) {
         displayWeather(data);
         hideLoadingSpinner();
         hideWelcomeMessage();
+        
+        // Save to search history
+        saveSearchToHistory(city);
+        loadAndDisplaySearchHistory();
 
     } catch (error) {
         console.error('Error fetching weather:', error);
@@ -113,6 +132,60 @@ function hideLoadingSpinner() {
 
 function hideWelcomeMessage() {
     welcomeMessage.style.display = 'none';
+}
+
+// Search history functions
+function getSearchHistory() {
+    const history = localStorage.getItem(HISTORY_KEY);
+    return history ? JSON.parse(history) : [];
+}
+
+function saveSearchToHistory(city) {
+    let history = getSearchHistory();
+    
+    // Remove duplicate if it exists (will add at the beginning)
+    history = history.filter(item => item.toLowerCase() !== city.toLowerCase());
+    
+    // Add new search at the beginning
+    history.unshift(city);
+    
+    // Keep only the last MAX_HISTORY_ITEMS
+    history = history.slice(0, MAX_HISTORY_ITEMS);
+    
+    // Save to localStorage
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+}
+
+function loadAndDisplaySearchHistory() {
+    const history = getSearchHistory();
+    
+    if (history.length === 0) {
+        searchHistorySection.style.display = 'none';
+        return;
+    }
+    
+    searchHistorySection.style.display = 'block';
+    searchHistoryContainer.innerHTML = '';
+    
+    history.forEach(city => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'history-item';
+        button.textContent = city;
+        button.addEventListener('click', () => {
+            cityInput.value = city;
+            weatherForm.dispatchEvent(new Event('submit'));
+        });
+        searchHistoryContainer.appendChild(button);
+    });
+}
+
+function clearSearchHistory() {
+    if (confirm('Are you sure you want to clear your search history?')) {
+        localStorage.removeItem(HISTORY_KEY);
+        searchHistorySection.style.display = 'none';
+        searchHistoryContainer.innerHTML = '';
+    }
 }
 
 // Optional: Allow search on Enter key in input field (form submission handles this)
