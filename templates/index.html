@@ -15,13 +15,16 @@
 
         <form id="weatherForm" class="search-form">
             <div class="input-group">
-                <input 
-                    type="text" 
-                    id="cityInput" 
-                    placeholder="Enter city name..." 
-                    autocomplete="off"
-                    required
-                >
+                <div class="autocomplete-wrapper">
+                    <input 
+                        type="text" 
+                        id="cityInput" 
+                        placeholder="Enter city name..." 
+                        autocomplete="off"
+                        required
+                    >
+                    <ul id="autocompleteSuggestions" class="autocomplete-suggestions" style="display: none;"></ul>
+                </div>
                 <button type="submit" class="search-btn">Search</button>
             </div>
             <div id="errorMessage" class="error-message"></div>

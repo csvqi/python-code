@@ -54,6 +54,11 @@ header .subtitle {
     margin-bottom: 15px;
 }
 
+.autocomplete-wrapper {
+    flex: 1;
+    position: relative;
+}
+
 #cityInput {
     flex: 1;
     padding: 14px 18px;
@@ -73,6 +78,50 @@ header .subtitle {
 
 #cityInput::placeholder {
     color: #999;
+}
+
+.autocomplete-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    list-style: none;
+    margin: 5px 0 0 0;
+    padding: 0;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    max-height: 250px;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.autocomplete-item {
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid #f0f0f0;
+    color: #333;
+    font-size: 14px;
+}
+
+.autocomplete-item:last-child {
+    border-bottom: none;
+}
+
+.autocomplete-item:hover,
+.autocomplete-item.selected {
+    background: #e8f4ff;
+    color: #0084ff;
+}
+
+.autocomplete-item strong {
+    font-weight: 600;
+    color: #0084ff;
+}
+
+.autocomplete-item.selected strong {
+    color: #0084ff;
 }
 
 .search-btn {
@@ -371,6 +420,15 @@ header .subtitle {
 
     .input-group {
         flex-direction: column;
+    }
+
+    .autocomplete-suggestions {
+        max-height: 200px;
+    }
+
+    .autocomplete-item {
+        padding: 8px 12px;
+        font-size: 13px;
     }
 
     .search-btn {

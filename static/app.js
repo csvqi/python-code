@@ -17,10 +17,26 @@ const welcomeMessage = document.getElementById('welcomeMessage');
 const searchHistorySection = document.getElementById('searchHistorySection');
 const searchHistoryContainer = document.getElementById('searchHistory');
 const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+const autocompleteSuggestions = document.getElementById('autocompleteSuggestions');
+
+// Popular cities for autocomplete
+const POPULAR_CITIES = [
+    'London', 'Paris', 'Tokyo', 'New York', 'Sydney', 'Dubai', 'Singapore',
+    'Hong Kong', 'Barcelona', 'Amsterdam', 'Rome', 'Berlin', 'Madrid',
+    'Los Angeles', 'Chicago', 'Toronto', 'Vancouver', 'Mexico City',
+    'Bangkok', 'Istanbul', 'Moscow', 'Cairo', 'Mumbai', 'Delhi',
+    'Beijing', 'Shanghai', 'Seoul', 'Bangkok', 'Jakarta', 'Manila',
+    'Vienna', 'Prague', 'Warsaw', 'Budapest', 'Athens', 'Dublin',
+    'Edinburgh', 'Copenhagen', 'Stockholm', 'Oslo', 'Helsinki',
+    'Istanbul', 'Athens', 'Tel Aviv', 'Dubai', 'Abu Dhabi',
+    'Reykjavik', 'Lisbon', 'Porto', 'Milan', 'Venice',
+    'Florence', 'Naples', 'Auckland', 'Melbourne', 'Brisbane'
+];
 
 // Search history management
 const MAX_HISTORY_ITEMS = 10;
 const HISTORY_KEY = 'weatherAppSearchHistory';
+let autocompleteIndex = -1;
 
 // Load and display history on page load
 document.addEventListener('DOMContentLoaded', () => {
@@ -32,6 +48,11 @@ weatherForm.addEventListener('submit', handleSearch);
 
 // Clear history button
 clearHistoryBtn.addEventListener('click', clearSearchHistory);
+
+// Autocomplete event listeners
+cityInput.addEventListener('input', handleAutocompleteInput);
+cityInput.addEventListener('keydown', handleAutocompleteKeyboard);
+document.addEventListener('click', closeAutocompleteOnClickOutside);
 
 function handleSearch(event) {
     event.preventDefault();
@@ -185,6 +206,100 @@ function clearSearchHistory() {
         localStorage.removeItem(HISTORY_KEY);
         searchHistorySection.style.display = 'none';
         searchHistoryContainer.innerHTML = '';
+    }
+}
+
+// Autocomplete functions
+function handleAutocompleteInput(event) {
+    const input = event.target.value.trim();
+    autocompleteIndex = -1;
+    
+    if (input.length === 0) {
+        closeAutocomplete();
+        return;
+    }
+    
+    // Filter cities that start with the input
+    const matches = POPULAR_CITIES.filter(city => 
+        city.toLowerCase().startsWith(input.toLowerCase())
+    ).slice(0, 8); // Limit to 8 suggestions
+    
+    if (matches.length === 0) {
+        closeAutocomplete();
+        return;
+    }
+    
+    displayAutocompleteSuggestions(matches, input);
+}
+
+function displayAutocompleteSuggestions(matches, searchTerm) {
+    autocompleteSuggestions.innerHTML = '';
+    
+    matches.forEach(city => {
+        const li = document.createElement('li');
+        li.className = 'autocomplete-item';
+        
+        // Highlight matching part
+        const index = city.toLowerCase().indexOf(searchTerm.toLowerCase());
+        const before = city.substring(0, index);
+        const match = city.substring(index, index + searchTerm.length);
+        const after = city.substring(index + searchTerm.length);
+        
+        li.innerHTML = `${before}<strong>${match}</strong>${after}`;
+        
+        li.addEventListener('click', () => {
+            cityInput.value = city;
+            closeAutocomplete();
+            weatherForm.dispatchEvent(new Event('submit'));
+        });
+        
+        autocompleteSuggestions.appendChild(li);
+    });
+    
+    autocompleteSuggestions.style.display = 'block';
+}
+
+function handleAutocompleteKeyboard(event) {
+    const items = autocompleteSuggestions.querySelectorAll('.autocomplete-item');
+    
+    if (items.length === 0) return;
+    
+    if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        autocompleteIndex = (autocompleteIndex + 1) % items.length;
+        updateAutocompleteSelection(items);
+    } else if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        autocompleteIndex = autocompleteIndex - 1 < 0 ? items.length - 1 : autocompleteIndex - 1;
+        updateAutocompleteSelection(items);
+    } else if (event.key === 'Enter' && autocompleteIndex >= 0) {
+        event.preventDefault();
+        items[autocompleteIndex].click();
+    } else if (event.key === 'Escape') {
+        closeAutocomplete();
+    }
+}
+
+function updateAutocompleteSelection(items) {
+    items.forEach((item, index) => {
+        if (index === autocompleteIndex) {
+            item.classList.add('selected');
+            item.scrollIntoView({ block: 'nearest' });
+        } else {
+            item.classList.remove('selected');
+        }
+    });
+}
+
+function closeAutocomplete() {
+    autocompleteSuggestions.style.display = 'none';
+    autocompleteSuggestions.innerHTML = '';
+    autocompleteIndex = -1;
+}
+
+function closeAutocompleteOnClickOutside(event) {
+    if (!event.target.closest('.autocomplete-wrapper')) {
+        closeAutocomplete();
     }
 }
 
